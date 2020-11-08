@@ -4,6 +4,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 // parse incoming requests 
 const bodyParser = require("body-parser");
+const passport = require("passport");
+
+const users = require("./routes/api/users"); 
 
 const app = express();
 
@@ -25,7 +28,7 @@ app.use(bodyParser.json());
 // DB Config 
 const db = require("./config/keys").mongoURI;
 
-//Connect to MongoDB
+// Connect to MongoDB
 mongoose.
     connect(
         db, 
@@ -33,6 +36,16 @@ mongoose.
     )
     .then(() => console.log("MongoDB successfully connected"))
     .catch(err => console.log(err));
+
+// Passport middleware
+// Authentication for Node.js: http://www.passportjs.org/
+app.use(passport.initialize());
+
+// Passport config
+require("./config/passport")(passport);
+
+// Routes
+app.use("/api/users/", users);
 
 // process.env.port is Heroku's port if you choose to deploy the app there
 const port = process.env.PORT || 5000;

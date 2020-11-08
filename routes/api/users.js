@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
+const passport = require("passport");
 
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
@@ -76,37 +77,46 @@ router.post("/login", (req, res) => {
         if (!user) {
             return res.status(404).json({ emailnotfound: "Email not found" });
         }
-    })
+    
 
-    // Check password
-    bcrypt.compare(password, user.password).then(isMatch => {
-        if (isMatch) {
-            // User matched 
-            // Create JWT Payload
-            const payload = {
-                id: user.id,
-                name: user.name
-            };
+        // Check password
+        /*
+        Info
+        What is .then? 
+        A method that returns a Promise. It takes call back functions for success and failure cases of the Promises
+        */
+        bcrypt.compare(password, user.password).then(isMatch => {
+            if (isMatch) {
+                // User matched 
+                // Create JWT Payload
+                const payload = {
+                    id: user.id,
+                    name: user.name
+                };
 
-            // Sign token 
-            jwt.sign(
-                payload, 
-                keys.sercretOrKey,
-                {
-                    expiresIn: 31556926 // 1 year in seconds
-                },
-                (err, token) => {
-                    res.json({
-                        success: true,
-                        token: "Bearer " + token
-                    });
-                }
-            );
-        }
-        else {
-            return res
-            .status(400)
-            .json({ passwordincorrect: "Password incorrect" });
-        }
-    })
+                // Sign token 
+                jwt.sign(
+                    payload, 
+                    keys.secretOrKey,
+                    {
+                        expiresIn: 31556926 // 1 year in seconds
+                    },
+                    (err, token) => {
+                        res.json({
+                            success: true,
+                            token: "Bearer " + token
+                        });
+                    }
+                );
+            }
+            else {
+                return res
+                .status(400)
+                .json({ passwordincorrect: "Password incorrect" });
+            }
+        });
+    });
 });
+
+// So that we can use it elsewhere
+module.exports = router;
