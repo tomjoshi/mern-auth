@@ -24,5 +24,16 @@ var ACCESS_TOKEN = null;
 var ITEM_ID = null;
 
 // Routes
+// @route POST api/plaid/accounts/add
+// @desc Trades public token for access token and stores credentials in database
+// @access Private
+router.post(
+    "/accounts/add",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => { 
+        
+    }
+)
+
 
 module.exports = router;
