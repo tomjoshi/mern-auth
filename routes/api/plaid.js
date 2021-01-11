@@ -73,11 +73,30 @@ router.post(
 // @route DELETE api/plaid/accounts/:id
 // @desc Delete account with given id
 // @access Private
-
+router.delete(
+    "/accounts/:id",
+    passport.authenticate("jwt", {session: false}),
+    (req, res) => {
+        Account.findById(req.params.id).then(account => {
+            // Delete account
+            account.remove().then(() => res.json({ success: true }));
+        });
+    }
+)
 
 // @route GET api/plaid/accounts
 // @desc Get all accounts linked with plaid for a specific user
 // @access Private
+router.get(
+    "/accounts",
+    passport.authenticate("jwt",  { session: false }),
+    (req, res) => {
+        Account.find({ userId: req.user.id })
+        .then(accounts => res.json(accounts))
+        .catch(err => console.log(err));
+    }
+)
+
 
 // @route POST api/plaid/accounts/transactions
 // @desc Fetch transactions from past 30 days from all linked accounts
