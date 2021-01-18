@@ -12,3 +12,20 @@ import {
     GET_TRANSACTIONS, 
     TRANSACTIONS_LOADING
 } from "../actions/types";
+
+const initialState = {
+    accounts: [],
+    transactions: [],
+    accountsLoading: false,
+    transactionsLoading: false
+};
+
+export default function(state = initialState, action) {
+    switch (action.type) {
+        case ACCOUNTS_LOADING:
+            return {
+                ...state,
+                accountsLoading: true
+            };
+    }
+}
