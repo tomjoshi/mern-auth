@@ -57,6 +57,6 @@ export default function(state = initialState, action) {
                 transactionsLoading: false
             };
         default: 
-        return state;
+            return state;
     }
 }
